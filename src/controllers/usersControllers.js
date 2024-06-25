@@ -10,7 +10,7 @@ const getUsers = (req, res) => {
   }
 
   if (req.query.city != null) {
-    sql += " where city = ?";
+    sql += " where city <= ?";
     sqlValues.push(req.query.city);
   }
 
