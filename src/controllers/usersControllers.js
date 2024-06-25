@@ -4,15 +4,38 @@ const getUsers = (req, res) => {
   let sql = "select * from users";
   const sqlValues = [];
 
+  const parameters = {};
+
+
+
   if (req.query.language != null) {
-    sql += " where language = ?";
-    sqlValues.push(req.query.language);
+    parameters.language = req.query.language;
   }
 
   if (req.query.city != null) {
-    sql += " where city <= ?";
-    sqlValues.push(req.query.city);
+    parameters.city = req.query.city;
   }
+
+  if (Object.keys(parameters).length != 0 ) {
+    sql += " where " ;
+
+    let i = 0;
+
+    for (key of Object.keys(parameters)){
+        if ( i != 0){
+           sql += " and ";
+        }
+        sql += key + " = ? ";
+        sqlValues.push(parameters[key])
+        i++;
+    }
+     
+     }
+
+   
+
+  console.log(sql, sqlValues);
+
 
   database
     .query(sql, sqlValues)
