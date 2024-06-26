@@ -80,10 +80,22 @@ const postUser = (req, res) => {
 };
 
 
+const updateUsers = (req, res) => {
+  const {firstname, lastname, email, city, language} = req.body;
+  const sql = `UPDATE users SET firstname=?, lastname=?, email=?, city=?, language=? WHERE id = ?`
+
+  database.query(sql, [firstname, lastname, email, city, language, req.params.id])
+  .then(([result]) => {
+    res.status(204).send(result)
+  })
+  .catch((err) => res.status(500).send(err))
+};
+
 
 
 module.exports = {
   getUsers,
   getUsersById,
   postUser,
+  updateUsers
 };
