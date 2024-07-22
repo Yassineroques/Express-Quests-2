@@ -20,6 +20,9 @@ app.post("/api/movies", movieControllers.postMovie)
 app.post("/api/users", usersControllers.postUser)
 app.post("/api/movies", validateMovie, movieControllers.postMovie);
 app.post("/api/users", validateUsers, usersControllers.postUser);
+app.delete("/api/movies/:id", movieControllers.deleteMovie);
+app.delete("/api/users/:id", usersControllers.deleteUser);
+
 
 
 
