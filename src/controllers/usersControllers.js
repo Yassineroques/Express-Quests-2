@@ -1,5 +1,5 @@
 const database = require("../../database");
-const { post } = require("../app");
+
 
 const getUsers = (req, res) => {
   let sql = "select * from users";
@@ -69,16 +69,28 @@ const getUsersById = (req, res) => {
 
 
 const postUser = (req, res) => {
-  const {firstname, lastname, email, city, language} = req.body;
-  const sql = `INSERT INTO users (firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)`
+  const {firstname, lastname, email, city, language, hashedPassword} = req.body;
+  const sql = `INSERT INTO users (firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)`
 
-  database.query(sql, [firstname, lastname, email, city, language])
+  database.query(sql, [firstname, lastname, email, city, language, hashedPassword])
   .then(([result]) => {
     res.status(201).send({id: result.insertId})
   })
   .catch((err) => res.status(500).send(err))
 };
 
+
+const updateUser = (req, res) => {
+  const {firstname, lastname, email, city, language, hashedPassword} = req.body;
+  const sql = `UPDATE users SET firstname=?, lastname=?, email=?, city=?, language=?, hashedPassword=? WHERE id = ?`
+  const id = parseInt(req.params.id)
+
+  database.query(sql, [firstname, lastname, email, city, language, hashedPassword, id])
+  .then(([result]) => {
+    id > 0 ? res.status(204).send(result) : res.status(404).send(result.info)
+  })
+  .catch((err) => res.status(500).send(err))
+};
 
 const deleteUser = (req, res) => {
   const id = parseInt(req.params.id);
@@ -104,5 +116,6 @@ module.exports = {
   getUsers,
   getUsersById,
   postUser,
-  deleteUser
+  deleteUser,
+  updateUser
 };
